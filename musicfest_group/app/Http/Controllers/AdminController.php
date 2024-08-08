@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -26,7 +27,13 @@ class AdminController extends Controller
      */
     public function promoteToAdmin(User $user)
     {
-        $user->update(['role' => 'admin']);
-        return redirect()->route('admin.dashboard');
+        Log::info('Promoting user to admin: ' . $user->email);
+
+        $user->role = 'admin';
+        $user->save();
+
+        Log::info('User role after update: ' . $user->role);
+
+        return redirect()->route('admin.dashboard')->with('success', 'User promoted to admin successfully');
     }
 }
