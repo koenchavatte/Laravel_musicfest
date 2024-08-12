@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
     /**
-     * toon een lijst van de users.
+     * Toon een lijst van de users.
      *
      * @return \Illuminate\Http\Response
      */
@@ -21,7 +21,7 @@ class AdminController extends Controller
     }
 
     /**
-     * promote een gebruiker tot admin.
+     * Promote een gebruiker tot admin.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
@@ -39,29 +39,38 @@ class AdminController extends Controller
     }
 
     /**
-     * maak een nieuwe admin account aan.
+     * Maak een nieuwe admin account aan.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function createAdmin(Request $request)
     {
+        // Validatie van de invoer
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        Log::info('Attempting to create a new admin account with email: ' . $request->email);
+
         // Maak een nieuwe gebruiker aan met de rol admin
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'admin',
+            'role' => 'admin', // Zorg ervoor dat de rol wordt ingesteld op 'admin'
         ]);
 
-        Log::info('New admin created: ' . $user->email);
+        // Controleer of de gebruiker correct is aangemaakt en opgeslagen
+        if ($user) {
+            Log::info('New admin created successfully: ' . $user->email . ' with role: ' . $user->role);
+        } else {
+            Log::error('Failed to create new admin with email: ' . $request->email);
+        }
 
         return redirect()->route('admin.dashboard')->with('success', 'New admin created successfully');
     }
 }
+
