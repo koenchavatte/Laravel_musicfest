@@ -39,7 +39,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Maak een nieuwe admin account aan.
+     * Maak een nieuwe account aan (user of admin afhankelijk van de toggle).
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -53,21 +53,21 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        Log::info('Attempting to create a new admin account with email: ' . $request->email);
+        Log::info('Attempting to create a new account with email: ' . $request->email);
 
-        // Maak een nieuwe gebruiker aan zonder direct de rol in te stellen
+        // Controleer de status van de toggle button om de rol te bepalen
+        $role = $request->has('is_admin') ? 'admin' : 'user';
+
+        // Maak een nieuwe gebruiker aan met de rol bepaald door de toggle
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $role,
         ]);
 
-        // Hergebruik de logica van promoteToAdmin om de rol van de gebruiker in te stellen
-        $user->role = 'admin';
-        $user->save();
+        Log::info('New account created successfully: ' . $user->email . ' with role: ' . $user->role);
 
-        Log::info('New admin created and promoted successfully: ' . $user->email . ' with role: ' . $user->role);
-
-        return redirect()->route('admin.dashboard')->with('success', 'New admin created successfully');
+        return redirect()->route('admin.dashboard')->with('success', 'New account created successfully');
     }
 }
