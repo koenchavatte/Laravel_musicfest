@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    <h2>Create a New Admin</h2>
+    <h2>Create a New User or Admin</h2>
     <form action="{{ route('admin.create') }}" method="POST">
         @csrf
         <div class="form-group">
@@ -29,7 +29,11 @@
             <label for="password_confirmation">Confirm Password</label>
             <input type="password" name="password_confirmation" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Create Admin</button>
+        <div class="form-group">
+            <label for="role_toggle">Admin Account</label>
+            <input type="checkbox" name="is_admin" id="role_toggle" class="form-check-input">
+        </div>
+        <button type="submit" class="btn btn-primary">Create Account</button>
     </form>
 
     <hr>
