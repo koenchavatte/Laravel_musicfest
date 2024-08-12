@@ -55,16 +55,24 @@ class AdminController extends Controller
 
         Log::info('Attempting to create a new account with email: ' . $request->email);
 
-        // Controleer de status van de toggle button om de rol te bepalen
-        $role = $request->has('is_admin') ? 'admin' : 'user';
-
-        // Maak een nieuwe gebruiker aan met de rol bepaald door de toggle
+        // Maak een nieuwe gebruiker aan zonder de rol direct in te stellen
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $role,
         ]);
+
+        // Bepaal de rol op basis van de toggle en stel deze vervolgens in
+        if ($request->filled('is_admin')) {
+            $user->role = 'admin';
+            Log::info('Role set to admin for user: ' . $user->email);
+        } else {
+            $user->role = 'user';
+            Log::info('Role set to user for user: ' . $user->email);
+        }
+
+        // Sla de gebruiker op met de juiste rol
+        $user->save();
 
         Log::info('New account created successfully: ' . $user->email . ' with role: ' . $user->role);
 
