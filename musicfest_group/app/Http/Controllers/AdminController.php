@@ -55,22 +55,19 @@ class AdminController extends Controller
 
         Log::info('Attempting to create a new admin account with email: ' . $request->email);
 
-        // Maak een nieuwe gebruiker aan met de rol admin
+        // Maak een nieuwe gebruiker aan zonder direct de rol in te stellen
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'admin', // Zorg ervoor dat de rol wordt ingesteld op 'admin'
         ]);
 
-        // Controleer of de gebruiker correct is aangemaakt en opgeslagen
-        if ($user) {
-            Log::info('New admin created successfully: ' . $user->email . ' with role: ' . $user->role);
-        } else {
-            Log::error('Failed to create new admin with email: ' . $request->email);
-        }
+        // Hergebruik de logica van promoteToAdmin om de rol van de gebruiker in te stellen
+        $user->role = 'admin';
+        $user->save();
+
+        Log::info('New admin created and promoted successfully: ' . $user->email . ' with role: ' . $user->role);
 
         return redirect()->route('admin.dashboard')->with('success', 'New admin created successfully');
     }
 }
-
