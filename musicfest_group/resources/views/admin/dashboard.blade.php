@@ -38,29 +38,46 @@
 
     <hr>
 
-    <h2>Promote Users to Admin</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($users as $user)
-            <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    <form action="{{ route('admin.promote', $user) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Promote to Admin</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <!-- Knop om de lijst met gebruikers te tonen/verbergen -->
+    <button id="toggle-users" class="btn btn-secondary">Show/Hide Users</button>
+
+    <div id="user-list" style="display:none;">
+        <h2>Promote Users to Admin</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($users as $user)
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>
+                        <form action="{{ route('admin.promote', $user) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Promote to Admin</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    // JavaScript om de lijst met gebruikers te tonen/verbergen
+    document.getElementById('toggle-users').addEventListener('click', function() {
+        var userList = document.getElementById('user-list');
+        if (userList.style.display === 'none' || userList.style.display === '') {
+            userList.style.display = 'block';
+        } else {
+            userList.style.display = 'none';
+        }
+    });
+</script>
 @endsection
