@@ -36,8 +36,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::resource('news', NewsController::class)->except(['show']); // Alles behalve de 'show' route
 });
 
+// Route voor het weergeven van een individueel nieuwsbericht
+Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+
 // Publieke profielroutes
 Route::get('/profile/{username}', [PublicProfileController::class, 'show'])->name('profile.public.show');
 
-// Zoekfunctie
+// Zoekfunctie voor zieke search bar
 Route::get('/search', [PublicProfileController::class, 'search'])->name('profile.search');
