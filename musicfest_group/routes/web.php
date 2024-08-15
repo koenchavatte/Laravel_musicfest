@@ -2,20 +2,13 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PublicProfileController; // Toegevoegd voor de publieke profielpagina's en zoekfunctie
+use App\Http\Controllers\PublicProfileController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\HomeController; // Toegevoegd voor de homepagina
 
-
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home'); // Veranderd naar HomeController
 
 Route::middleware([
     'auth:sanctum',
@@ -37,7 +30,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/promote/{user}', [AdminController::class, 'promoteToAdmin'])->name('admin.promote');
-    Route::post('/admin/create', [AdminController::class, 'createAdmin'])->name('admin.create'); // Nieuwe route voor het aanmaken van een admin
+    Route::post('/admin/create', [AdminController::class, 'createAdmin'])->name('admin.create');
+
+    // Routes voor nieuwsbeheer
+    Route::resource('news', NewsController::class)->except(['show']); // Alles behalve de 'show' route
 });
 
 // Publieke profielroutes
