@@ -23,6 +23,11 @@
         </div>
 
         <div class="form-group">
+            <label for="birthdate">Birthdate</label>
+            <input type="date" name="birthdate" class="form-control" value="{{ $user->birthdate }}">
+        </div>
+
+        <div class="form-group">
             <label for="avatar">Profile Picture</label>
             <input type="file" name="avatar" class="form-control">
             @if($user->avatar)

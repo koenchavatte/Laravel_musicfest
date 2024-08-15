@@ -22,10 +22,12 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'bio' => 'nullable|string|max:500',
             'avatar' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'birthdate' => 'nullable|date', // Validatie voor geboortedatum
         ]);
 
         $user->name = $request->name;
         $user->bio = $request->bio;
+        $user->birthdate = $request->birthdate; // Opslaan van geboortedatum
 
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
