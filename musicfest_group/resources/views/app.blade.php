@@ -16,6 +16,8 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        @inertia
-    </body>
-</html>
+        <!-- Zoekbalk -->
+        <div class="container mx-auto p-4">
+            <form action="{{ route('profile.search') }}" method="GET" class="flex items-center">
+                <input type="text" name="query" class="form-input rounded-l-md border-2 border-r-0 border-gray-300 p-2 w-full" placeholder="Search users...">
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded-r-md border-2 border-blue-500">

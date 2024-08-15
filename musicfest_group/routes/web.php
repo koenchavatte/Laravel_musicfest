@@ -4,7 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ProfileController; // Toegevoegd voor de profielpagina routes
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicProfileController; // Toegevoegd voor de publieke profielpagina's en zoekfunctie
 
 
 Route::get('/', function () {
@@ -26,7 +27,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Profielroutes
+// Profielroutes voor ingelogde gebruikers
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -38,3 +39,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::post('/admin/promote/{user}', [AdminController::class, 'promoteToAdmin'])->name('admin.promote');
     Route::post('/admin/create', [AdminController::class, 'createAdmin'])->name('admin.create'); // Nieuwe route voor het aanmaken van een admin
 });
+
+// Publieke profielroutes
+Route::get('/profile/{username}', [PublicProfileController::class, 'show'])->name('profile.public.show');
+
+// Zoekfunctie
+Route::get('/search', [PublicProfileController::class, 'search'])->name('profile.search');
