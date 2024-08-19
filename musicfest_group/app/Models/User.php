@@ -27,9 +27,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar',   // Toegevoegd voor profielfoto
-        'bio',      // Toegevoegd voor biografie
-        'birthdate',// Toegevoegd voor verjaardag
     ];
 
     /**

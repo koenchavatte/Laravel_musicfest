@@ -1,41 +1,45 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Profile') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <h1>Profile</h1>
+    <div>
+        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+            @if (Laravel\Fortify\Features::canUpdateProfileInformation())
+                @livewire('profile.update-profile-information-form')
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+                <x-section-border />
+            @endif
 
-    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
-        </div>
+            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.update-password-form')
+                </div>
 
-        <div class="form-group">
-            <label for="bio">Bio</label>
-            <textarea name="bio" class="form-control">{{ $user->bio }}</textarea>
-        </div>
+                <x-section-border />
+            @endif
 
-        <div class="form-group">
-            <label for="birthdate">Birthdate</label>
-            <input type="date" name="birthdate" class="form-control" value="{{ $user->birthdate }}">
-        </div>
+            @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.two-factor-authentication-form')
+                </div>
 
-        <div class="form-group">
-            <label for="avatar">Profile Picture</label>
-            <input type="file" name="avatar" class="form-control">
-            @if($user->avatar)
-                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="mt-2" style="width: 150px;">
+                <x-section-border />
+            @endif
+
+            <div class="mt-10 sm:mt-0">
+                @livewire('profile.logout-other-browser-sessions-form')
+            </div>
+
+            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
+                <x-section-border />
+
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.delete-user-form')
+                </div>
             @endif
         </div>
-
-        <button type="submit" class="btn btn-primary">Update Profile</button>
-    </form>
-</div>
-@endsection
+    </div>
+</x-app-layout>
